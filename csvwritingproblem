@@ -1,0 +1,53 @@
+#csvfilecontain:
+   #danial,99b057c8e3461b97f8d6c461338cf664bc84706b9cc2812daaebf210ea1b9974
+   #elham,85432a9890aa5071733459b423ab2aff9f085f56ddfdb26c8fae0c2a04dce84c
+import csv
+import itertools
+from collections import OrderedDict
+import hashlib
+
+with open ('code.csv', 'r') as input_file_name:
+    reader=csv.reader(input_file_name)
+    key=[]
+    val1=[]
+    for row in reader:
+        name = row[0]
+        val=[str(num) for num in row[1:]]
+        key.append(name)
+        val1.append(val)
+        value = list(itertools.chain.from_iterable(val1)) #making a simple list from list of list in value
+        value=[str(i) for i in value]
+    #print(key)
+    dict_csv = dict(zip(key, value))  #making a dictionary from the csv file
+#print(dict_csv)
+listval=[]
+for item in dict_csv.values():
+    #print(item)
+    listval.append(item) 
+#print(listval)
+
+rainbow_dict = {}
+for i in range(1000, 10000): # note you need upper end to be 10000 in odrder to include 9999
+    my_hash = hashlib.sha256(str(i).encode()).hexdigest()
+    rainbow_dict[my_hash] = i
+#print(rainbow_dict)
+list1=[k for k,v in dict_csv.items() if v in listval]
+#print(list1)
+list2=[v for k,v in rainbow_dict.items() if k in listval]
+#print(list2)
+####
+list3 = [ item for pair in zip(list1, list2 + [0]) for item in pair]
+#print(list3)
+data=[]
+for item in list3:
+    #data=[]
+    l3=[]
+    l3.append(item)
+    #print(l3)
+    data.append(str(item))
+print(data)
+
+with open('code.csv', 'w', newline='') as output_file_name:
+        writer = csv.writer(output_file_name)
+        writer.writerows(data)
+        output_file_name.close()
